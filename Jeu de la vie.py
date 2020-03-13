@@ -8,6 +8,8 @@ from tkinter import *
 from tkinter.messagebox import *
 from random import *
 import time
+from tkinter.filedialog import *
+import tkinter.colorchooser
 
 
 
@@ -19,17 +21,25 @@ etatCell2 = []  #map avec état cell à l'étape a+1
 #speed = IntVar()
 pause = 3
 random = False
+choixCouleur = True
+couleurVivant = "chartreuse"
 
 
+#Classe
+"""
+class Cellule:
 
-if random == False:
-    fichier = open("map.txt", "r")      #Importation du fichier map.txt
-    contenuFichier = fichier.read()
-    fichier.close()
+    Classe pour les cellules
+    - etat
+    - position x
+    - position y
 
-    taille = int(contenuFichier.split("\n")[0])
-    print(taille)
-    #print(contenuFichier)
+    def __init__(self):
+        self.etat =
+        self.posx
+        self.posy =
+"""
+
 
 
 
@@ -37,6 +47,24 @@ if random == False:
 #Fenetre Principale
 Fenetre = Tk()
 Fenetre.title("Jeu de la Vie by Marius")
+
+
+
+#Options
+if choixCouleur == True:
+    couleurVivant = (tkinter.colorchooser.askcolor(color=None))[1]
+
+
+if random == False:
+    filepath = askopenfilename(title = "Ouvrir une map",filetypes = [("txt files", ".txt")])
+    fichier = open(filepath, "r")      #Importation du fichier map.txt
+    contenuFichier = fichier.read()
+    fichier.close()
+
+    taille = int(contenuFichier.split("\n")[0])
+    print(taille)
+    #print(contenuFichier)
+
 
 
 
@@ -73,7 +101,7 @@ def generation():
 
 
         for i in range(taille):
-            print(mapFichier[i+1])
+            #print(mapFichier[i+1])
             for j in range(taille):
                 if mapFichier[i+1][j] == "0":    #0 = cell morte
                     etatCell[i][j] = False
@@ -96,10 +124,10 @@ def initialisationFenetre():
         for j in range(taille):
             if etatCell[i][j] == True:
                 Label(Fenetre, text = "   ", relief = GROOVE, borderwidth = 1, bg = "chartreuse").grid(row = i, column = j, sticky = "news")
-                print("ON")
+                #print("ON")
             else:
                 Label(Fenetre, text = "   ", relief = GROOVE, borderwidth = 1, bg = "light grey").grid(row = i, column = j, sticky = "news")
-                print("OFF")
+                #print("OFF")
 
 
     #Slider de vitesse
@@ -161,19 +189,19 @@ def changement():
     global etatCell, etatCell2
     for i in range(taille):
         for j in range(taille):
-            print(str(i) + str("  ") + str(j))
-            print(compteur(i, j))
-            print(etatCell[i][j])
+            #print(str(i) + str("  ") + str(j))
+            #print(compteur(i, j))
+            #print(etatCell[i][j])
             if compteur(i, j) == 3:
                 etatCell2[i][j] = True
-                print("nait")
+                #print("nait")
             elif compteur(i, j) == 2 and etatCell[i][j] == True:
                 etatCell2[i][j] = True
-                print("persiste")
+                #print("persiste")
             else:
                 etatCell2[i][j] = False
-                print("meurt")
-            print()
+                #print("meurt")
+            #print()
 
     """
     print(compteur(1, 2))
@@ -201,12 +229,12 @@ def boucle():
 
     if test == 1:
         update()
-        for i in range(taille):
-            print(etatCell[i])
+        #for i in range(taille):
+            #print(etatCell[i])
     test = 1
-    print(compteur(3,1))
-    print(etatCell[1][3])
-    Fenetre.after(pause * 1000, boucle) #Attente entre 2 étapes
+    #print(compteur(3,1))
+    #print(etatCell[1][3])
+    Fenetre.after(int(pause * 1000), boucle) #Attente entre 2 étapes
 
 
 
@@ -220,8 +248,8 @@ initialisationFenetre()
 #Lancement
 
 
-for i in range(taille):
-    print(etatCell[i])
+#for i in range(taille):
+    #print(etatCell[i])
 
 
 
