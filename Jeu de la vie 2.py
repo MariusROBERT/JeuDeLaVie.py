@@ -17,11 +17,11 @@ from copy import deepcopy
 #Variables
 taille = 5
 pourcentageVivant = 20
-etatCell = []  #map avec état cell à l'étape n
-etatCell2 = []  #map avec état cell à l'étape n+1
-pause = 0.2       #Temps de pause entre chaue étape (en s)
-random = False   #map random ou via fichier
-choixCouleur = False     #choixCouleur ou couleur de base
+etatCell = []               #map avec état cell à l'étape n
+etatCell2 = []              #map avec état cell à l'étape n+1
+pause = 0.2                 #Temps de pause entre chaue étape (en s)
+random = False              #map random ou via fichier
+choixCouleur = False        #choixCouleur ou couleur de base
 couleurVivant = "chartreuse"
 
 
