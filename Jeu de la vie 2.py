@@ -10,6 +10,7 @@ from random import *
 import time
 from tkinter.filedialog import *
 import tkinter.colorchooser
+from copy import deepcopy
 
 
 
@@ -18,9 +19,9 @@ taille = 5
 pourcentageVivant = 20
 etatCell = []  #map avec état cell à l'étape n
 etatCell2 = []  #map avec état cell à l'étape n+1
-pause = 5
-random = False
-choixCouleur = False
+pause = 0.2       #Temps de pause entre chaue étape (en s)
+random = False   #map random ou via fichier
+choixCouleur = False     #choixCouleur ou couleur de base
 couleurVivant = "chartreuse"
 
 
@@ -79,10 +80,10 @@ def generation():
         for x in range(taille):                     #-> 1 case du tableau
             for y in range(taille):
 
-                if mapFichier[x+1][y] == "0":       #0 sur txt = morte
+                if mapFichier[y+1][x] == "0":       #0 sur txt = morte
                     etatCell[y][x] = False
 
-                elif mapFichier[x+1][y] == "1":     #1 sur txt = vivante
+                elif mapFichier[y+1][x] == "1":     #1 sur txt = vivante
                     etatCell[y][x] = True
 
 
@@ -91,7 +92,6 @@ def generation():
 
 
 def initialisationFenetre():
-
 
     for x in range(taille):
         for y in range(taille):
@@ -126,30 +126,23 @@ def compteur(x, y):
             xfinal = x + xadd
 
             if yfinal >= taille and xfinal >= taille:       #Si dépasse de la map x & y, reviens de l'autre côté
-                print(etatCell[yfinal - taille][xfinal - taille])
                 if etatCell[yfinal - taille][xfinal - taille] == True:
                     cellVivantesAutour += 1
 
             elif yfinal >= taille:                          #Si dépasse de la map en y, reviens de l'autre côté
-                print(etatCell[yfinal - taille][xfinal])
                 if etatCell[yfinal - taille][xfinal] == True:
                     cellVivantesAutour += 1
 
             elif xfinal >= taille:                          #Si dépasse de la map en x, reviens de l'autre côté
-                print(etatCell[yfinal][xfinal - taille])
                 if etatCell[yfinal][xfinal - taille] == True:
                     cellVivantesAutour += 1
 
             elif yadd != 0 or xadd != 0:                    #On compte les cases autour mais pas la case elle même
-                print(etatCell[yfinal][xfinal])
                 if etatCell[yfinal][xfinal] == True:
                     cellVivantesAutour += 1
 
             elif yadd == 0 and xadd == 0:
-                print("case")
                 pass
-
-        print("")
 
     return cellVivantesAutour
 
@@ -163,20 +156,16 @@ def etapeSuivante():
 
             cellVivantesAutour = compteur(x, y)
 
-            print(cellVivantesAutour)
-
             if cellVivantesAutour == 3:
                 etatCell2[y][x] = True
 
-            if cellVivantesAutour == 2 and etatCell[y][x] == True:
+            elif cellVivantesAutour == 2 and etatCell[y][x] == True:
                 etatCell2[y][x] = True
 
             else:
                 etatCell2[y][x] = False
 
-        print("")
-
-    etatCell = etatCell2
+    etatCell = deepcopy(etatCell2)
 
 
 
@@ -207,7 +196,7 @@ test = 0
 def bouclePrincipale():
     global test
 
-    print("bouclePrincipale")
+    #print("bouclePrincipale")
 
     if test == 1:
         changement()
