@@ -21,17 +21,19 @@ os.chdir(os.path.dirname(fullpath))
 
 
 #Variables
-taille = 25
+taille = 10
 pourcentageVivant = 50
 etatCell = []                   #map avec état cell à l'étape n
 etatCell2 = []                  #map avec état cell à l'étape n+1
-pause = 0.01                    #Temps de pause entre chaue étape (en s)
+pause = 0.001                   #Temps de pause entre chaue étape (en s)
 choixCouleur = False            #choixCouleur ou couleur de base
 couleurVivant = "chartreuse"    #Couleur de base pour les cellules vivantes
 random = False                  #map générée random
 stop = False                    #Pour le bouton start/stop
 vide = False                    #Pour créer une map vide
 importation = False             #Importation d'une map
+etape = 0
+genere = False
 
 
 
@@ -39,6 +41,8 @@ importation = False             #Importation d'une map
 Fenetre = Tk()
 Fenetre.title("Jeu de la Vie by Marius")
 
+frameJeu = Frame(Fenetre)
+frameJeu.grid(row = 1, column = 0, sticky = "news")
 
 
 #Options
@@ -47,12 +51,18 @@ if choixCouleur == True:
     couleurVivant = (tkinter.colorchooser.askcolor(color=None))[1]
 
 
-
 #Commandes boutons
 
-
 def choixMap():
-    global contenuFichier, taille, importation
+    global etape, etatCell, etatCell2, contenuFichier, taille, importation
+
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
 
     importation = True
     random = False
@@ -71,11 +81,19 @@ def choixMap():
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 def choixMoulin():
-    global contenuFichier, taille, importation
+    global etape, etatCell, etatCell2, contenuFichier, taille, importation
+
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
 
     importation = True
     random = False
@@ -92,11 +110,19 @@ def choixMoulin():
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 def choixRandom():
-    global contenuFichier, taille, random
+    global etape, etatCell, etatCell2, contenuFichier, taille, random
+
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
 
     random = True
     importation = True
@@ -106,11 +132,19 @@ def choixRandom():
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 def choixStatique():
-    global contenuFichier, taille, importation
+    global etape, etatCell, etatCell2, contenuFichier, taille, importation
+
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
 
     importation = True
     random = False
@@ -127,11 +161,19 @@ def choixStatique():
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 def choixClignotant():
-    global contenuFichier, taille, importation
+    global etape, etatCell, etatCell2, contenuFichier, taille, importation
+
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
 
     importation = True
     random = False
@@ -148,11 +190,19 @@ def choixClignotant():
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 def choixVaisseau():
-    global contenuFichier, taille, importation
+    global etape, etatCell, etatCell2, contenuFichier, taille, importation
+
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
 
     importation = True
     random = False
@@ -169,7 +219,7 @@ def choixVaisseau():
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 
@@ -210,15 +260,26 @@ def save():
 
 
 def creerGrille():
-    global taille, vide
+    global etape, taille, vide, etatCell, etatCell2
 
+    del etatCell
+    del etatCell2
+    etatCell = []
+    etatCell2 = []
+    etape = 0
+
+    resetFrame()
+
+    importation = True
+    random = False
+    stop = False
     vide = True
     taille = int(spinboxTaille.get())
 
     generation()
     initialisationFenetre()
 
-    frame.grid(columnspan = taille)
+    frameCommande.grid(columnspan = taille)
 
 
 #Génération
@@ -228,15 +289,18 @@ def generation():
 
     genere = True
 
-    Fenetre.columnconfigure(0, weight = 1)
     Fenetre.rowconfigure(0, weight = 1)
+    Fenetre.rowconfigure(1, weight = 1)
+    Fenetre.rowconfigure(2, weight = 1)
+
+    Fenetre.columnconfigure(1, weight = 1)
 
     for y in range(taille):
         etatCell.append([])     #Tableaux
         etatCell2.append([])
 
-        Fenetre.columnconfigure(y + 1, weight = 1)  #Pour éviter la déformation
-        Fenetre.rowconfigure(y + 1, weight = 1)     #en étirant la fenetre
+        frameJeu.columnconfigure(y, weight = 1)  #Pour éviter la déformation
+        frameJeu.rowconfigure(y, weight = 1)     #en étirant la fenetre
 
         for x in range(taille):
             etatCell[y].append([])  #Double tableaux
@@ -291,20 +355,20 @@ def initialisationFenetre():
     for x in range(taille):
         for y in range(taille):
             if etatCell[y][x] == True:          #Si cell vivante
-                Label(Fenetre,                  #case verte (ou couleur choisie)
+                Label(frameJeu,                  #case verte (ou couleur choisie)
                     text = "   ",
                     relief = GROOVE,
                     borderwidth = 1,
                     bg = couleurVivant).grid(
-                    row = y + 1, column = x, sticky = "news")
+                    row = y, column = x, sticky = "news")
 
             elif etatCell[y][x] == False:       #Si cell morte
-                Label(Fenetre,                  #case grise
+                Label(frameJeu,                  #case grise
                     text = "   ",
                     relief = GROOVE,
                     borderwidth = 1,
                     bg = "light grey").grid(
-                    row = y + 1, column = x, sticky = "news")
+                    row = y, column = x, sticky = "news")
 
             else:
                 print("Erreur Cell ni vivante ni morte")    #Erreur, pas censé arriver
@@ -369,10 +433,10 @@ def actualisationFenetre():
     for x in range(taille):
         for y in range(taille):
             if etatCell[y][x] == True:
-                Fenetre.grid_slaves(row = y + 1, column = x)[0].configure(bg = couleurVivant)
+                frameJeu.grid_slaves(row = y, column = x)[0].configure(bg = couleurVivant)
 
             else:
-                Fenetre.grid_slaves(row = y + 1, column = x)[0].configure(bg = "light grey")
+                frameJeu.grid_slaves(row = y, column = x)[0].configure(bg = "light grey")
 
 
 
@@ -383,14 +447,23 @@ def changement():
     actualisationFenetre()
 
 
+def resetFrame():       #Clear la frame pour en remettre une autre
+    for widget in frameJeu.winfo_children():
+        widget.grid_forget()
+
+    nombreEtapes["text"] = "Étape : 0"
+
+
 
 antistart = 0
 
 def bouclePrincipale():
-    global antistart, pause, stop
+    global antistart, pause, stop, etape
 
     if antistart == 1 and stop == False:
         changement()
+        etape += 1
+        nombreEtapes["text"] = "Étape : " + str(etape)
 
     antistart = 1
 
@@ -402,17 +475,17 @@ def bouclePrincipale():
 
 def action(event):
 
-    if event.type != "" and event.num == 1:
+    if event.type != "" and event.num == 1 and genere == True and type(event.widget) != Tk:
 
         position = event.widget.grid_info()
 
         if event.widget["bg"] == "light grey" and event.widget["text"] == "   ":
             event.widget["bg"] = couleurVivant
-            etatCell[position["row"] - 1][position["column"]] = True
+            etatCell[position["row"]][position["column"]] = True
 
         elif event.widget["bg"] == couleurVivant and event.widget["text"] == "   ":
             event.widget["bg"] = "light grey"
-            etatCell[position["row"] - 1][position["column"]] = False
+            etatCell[position["row"]][position["column"]] = False
 
 
 
@@ -422,24 +495,33 @@ Fenetre.bind("<ButtonPress-1>", action)
 
 #Commandes
 
-frame = LabelFrame(Fenetre, text = "Commandes")
-frame.grid(row = 0, column = 0)
+frameCommande = LabelFrame(Fenetre, text = "Commandes")
+frameCommande.grid(row = 0, column = 0, sticky = "news")
 
 
-boutonStart = Button(frame, text = "Start", fg = "chartreuse", command = start)
+boutonStart = Button(frameCommande, text = "Start", fg = "chartreuse", command = start)
 boutonStart.grid(row = 0, column = 0)
 
-boutonSave = Button(frame, text = "Save", command = save)
+boutonSave = Button(frameCommande, text = "Save", command = save)
 boutonSave.grid(row = 0, column = 1)
 
-labelTaille = Label(frame, text = " Taille =")
+labelTaille = Label(frameCommande, text = " Taille =")
 labelTaille.grid(row = 0, column = 2)
 
-spinboxTaille = Spinbox(frame, from_ = 1, to = 50)
+spinboxTaille = Spinbox(frameCommande, from_ = 1, to = 50)
 spinboxTaille.grid(row = 0, column = 3)
 
-boutonGrille = Button(frame, text = "Créer une grille vide", command = creerGrille)
+boutonGrille = Button(frameCommande, text = "Créer une grille vide", command = creerGrille)
 boutonGrille.grid(row = 0, column = 4)
+
+
+#Infos
+
+frameInfos = LabelFrame(Fenetre, text = "Infos")
+frameInfos.grid(row = 2, column = 0, sticky = "news")
+
+nombreEtapes = Label(frameInfos, text = "Étape 0")
+nombreEtapes.pack()
 
 
 #Lancement
