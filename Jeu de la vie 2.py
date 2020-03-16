@@ -26,9 +26,9 @@ pourcentageVivant = 50
 etatCell = []                   #map avec état cell à l'étape n
 etatCell2 = []                  #map avec état cell à l'étape n+1
 pause = 0.01                    #Temps de pause entre chaue étape (en s)
-random = False                  #map random ou via fichier
 choixCouleur = False            #choixCouleur ou couleur de base
-couleurVivant = "chartreuse"
+couleurVivant = "chartreuse"    #Couleur de base pour les cellules vivantes
+random = False                  #map générée random
 stop = False                    #Pour le bouton start/stop
 vide = False                    #Pour créer une map vide
 importation = False             #Importation d'une map
@@ -55,6 +55,9 @@ def choixMap():
     global contenuFichier, taille, importation
 
     importation = True
+    random = False
+    stop = False
+    vide = False
 
     filepath = askopenfilename(title = "Ouvrir une map",filetypes = [("txt files", ".txt")])
     print(filepath)
@@ -75,6 +78,9 @@ def choixMoulin():
     global contenuFichier, taille, importation
 
     importation = True
+    random = False
+    stop = False
+    vide = False
 
     fichier = open("map moulin.txt", "r")
     contenuFichier = fichier.read()
@@ -93,6 +99,9 @@ def choixRandom():
     global contenuFichier, taille, random
 
     random = True
+    importation = True
+    stop = False
+    vide = False
 
     generation()
     initialisationFenetre()
@@ -104,6 +113,9 @@ def choixStatique():
     global contenuFichier, taille, importation
 
     importation = True
+    random = False
+    stop = False
+    vide = False
 
     fichier = open("map statique.txt", "r")
     contenuFichier = fichier.read()
@@ -122,6 +134,9 @@ def choixClignotant():
     global contenuFichier, taille, importation
 
     importation = True
+    random = False
+    stop = False
+    vide = False
 
     fichier = open("map clignotant.txt", "r")
     contenuFichier = fichier.read()
@@ -140,6 +155,9 @@ def choixVaisseau():
     global contenuFichier, taille, importation
 
     importation = True
+    random = False
+    stop = False
+    vide = False
 
     fichier = open("map vaisseau.txt", "r")
     contenuFichier = fichier.read()
@@ -408,10 +426,10 @@ frame = LabelFrame(Fenetre, text = "Commandes")
 frame.grid(row = 0, column = 0)
 
 
-boutonStart = Button(frame, text = "Start", fg = "chartreuse", command = start, borderwidth = 10)
+boutonStart = Button(frame, text = "Start", fg = "chartreuse", command = start)
 boutonStart.grid(row = 0, column = 0)
 
-boutonSave = Button(frame, text = "Save", command = save, borderwidth = 10)
+boutonSave = Button(frame, text = "Save", command = save)
 boutonSave.grid(row = 0, column = 1)
 
 labelTaille = Label(frame, text = " Taille =")
