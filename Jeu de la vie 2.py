@@ -21,15 +21,17 @@ os.chdir(os.path.dirname(fullpath))
 
 
 #Variables
-taille = 5
-pourcentageVivant = 20
-etatCell = []               #map avec état cell à l'étape n
-etatCell2 = []              #map avec état cell à l'étape n+1
-pause = 0.5                 #Temps de pause entre chaue étape (en s)
-random = False              #map random ou via fichier
-choixCouleur = False        #choixCouleur ou couleur de base
+taille = 25
+pourcentageVivant = 50
+etatCell = []                   #map avec état cell à l'étape n
+etatCell2 = []                  #map avec état cell à l'étape n+1
+pause = 0.01                    #Temps de pause entre chaue étape (en s)
+random = False                  #map random ou via fichier
+choixCouleur = False            #choixCouleur ou couleur de base
 couleurVivant = "chartreuse"
-stop = False
+stop = False                    #Pour le bouton start/stop
+vide = False                    #Pour créer une map vide
+importation = False             #Importation d'une map
 
 
 
@@ -50,9 +52,9 @@ if choixCouleur == True:
 
 
 def choixMap():
-    global contenuFichier, taille
+    global contenuFichier, taille, importation
 
-    random = False
+    importation = True
 
     filepath = askopenfilename(title = "Ouvrir une map",filetypes = [("txt files", ".txt")])
     print(filepath)
@@ -66,11 +68,13 @@ def choixMap():
     generation()
     initialisationFenetre()
 
+    frame.grid(columnspan = taille)
+
 
 def choixMoulin():
-    global contenuFichier, taille
+    global contenuFichier, taille, importation
 
-    random = False
+    importation = True
 
     fichier = open("map moulin.txt", "r")
     contenuFichier = fichier.read()
@@ -82,20 +86,24 @@ def choixMoulin():
     generation()
     initialisationFenetre()
 
+    frame.grid(columnspan = taille)
+
 
 def choixRandom():
-    global contenuFichier, taille
+    global contenuFichier, taille, random
 
     random = True
 
     generation()
     initialisationFenetre()
 
+    frame.grid(columnspan = taille)
+
 
 def choixStatique():
-    global contenuFichier, taille
+    global contenuFichier, taille, importation
 
-    random = False
+    importation = True
 
     fichier = open("map statique.txt", "r")
     contenuFichier = fichier.read()
@@ -107,11 +115,13 @@ def choixStatique():
     generation()
     initialisationFenetre()
 
+    frame.grid(columnspan = taille)
+
 
 def choixClignotant():
-    global contenuFichier, taille
+    global contenuFichier, taille, importation
 
-    random = False
+    importation = True
 
     fichier = open("map clignotant.txt", "r")
     contenuFichier = fichier.read()
@@ -123,11 +133,13 @@ def choixClignotant():
     generation()
     initialisationFenetre()
 
+    frame.grid(columnspan = taille)
+
 
 def choixVaisseau():
-    global contenuFichier, taille
+    global contenuFichier, taille, importation
 
-    random = False
+    importation = True
 
     fichier = open("map vaisseau.txt", "r")
     contenuFichier = fichier.read()
@@ -139,43 +151,74 @@ def choixVaisseau():
     generation()
     initialisationFenetre()
 
+    frame.grid(columnspan = taille)
+
 
 
 
 def start():
     global stop
 
-    print("start")
     stop = False
 
     boutonStart.config(text = "Stop", fg = "red", command = stopBoucle)
 
-    if test == 0:
-        bouclePrincipale()
+    if antistart == 0:          #Lance la boucle la première fois
+        bouclePrincipale()      #Les autres fois, change juste stop à False et aspect du bouton
 
 
 def stopBoucle():
     global stop
 
-    print("stop")
     stop = True
 
     boutonStart.config(text = "Start", fg = "chartreuse", command = start)
 
 
+def save():
+    fichierEcriture = asksaveasfile(title = "Enregistrer la configuration actuelle", filetypes = [("txt files", ".txt")])
+    texteEcriture = str(taille) + "\n"
+
+    for x in range(taille):
+        for y in range(taille):
+            if etatCell[y][x] == True:
+                texteEcriture += "1"
+            elif etatCell[y][x] == False:
+                texteEcriture += "0"
+        texteEcriture += "\n"
+
+    fichierEcriture.write(texteEcriture)
+    fichierEcriture.close()
+
+
+def creerGrille():
+    global taille, vide
+
+    vide = True
+    taille = int(spinboxTaille.get())
+
+    generation()
+    initialisationFenetre()
+
+    frame.grid(columnspan = taille)
+
 
 #Génération
 
 def generation():
-    global pourcentageVivant
+    global pourcentageVivant, genere
 
+    genere = True
+
+    Fenetre.columnconfigure(0, weight = 1)
+    Fenetre.rowconfigure(0, weight = 1)
 
     for y in range(taille):
         etatCell.append([])     #Tableaux
         etatCell2.append([])
 
-        Fenetre.columnconfigure(y, weight = 1)  #Pour éviter la déformation
-        Fenetre.rowconfigure(y, weight = 1)     #en étirant la fenetre
+        Fenetre.columnconfigure(y + 1, weight = 1)  #Pour éviter la déformation
+        Fenetre.rowconfigure(y + 1, weight = 1)     #en étirant la fenetre
 
         for x in range(taille):
             etatCell[y].append([])  #Double tableaux
@@ -188,16 +231,20 @@ def generation():
                 else:                                       #du pourcentage choisi
                     etatCell[y][x] = False
 
-    if random == False:
+            if vide == True:
+                etatCell[y][x] = False
+
+
+    if importation == True:
         mapFichier = contenuFichier.split("\n")     #Tableau de la map
                                                     #1 ligne sur le txt
         for x in range(taille):                     #-> 1 case du tableau
             for y in range(taille):
 
-                if mapFichier[y+1][x] == "0":       #0 sur txt = morte
+                if mapFichier[y + 1][x] == "0":       #0 sur txt = morte
                     etatCell[y][x] = False
 
-                elif mapFichier[y+1][x] == "1":     #1 sur txt = vivante
+                elif mapFichier[y + 1][x] == "1":     #1 sur txt = vivante
                     etatCell[y][x] = True
 
 #Barre de menus
@@ -215,10 +262,6 @@ menuMap.add_command(label = "Statique", command = choixStatique)
 menuMap.add_command(label = "Vaisseau", command = choixVaisseau)
 menuMap.add_separator()
 menuMap.add_command(label = "Importer map", command = choixMap)
-
-
-
-
 
 
 
@@ -318,36 +361,73 @@ def actualisationFenetre():
 
 def changement():
 
-
-
     etapeSuivante()
     actualisationFenetre()
 
 
-test = 0
 
+antistart = 0
 
 def bouclePrincipale():
-    global test, pause, stop
+    global antistart, pause, stop
 
-    if test == 1 and stop == False:
+    if antistart == 1 and stop == False:
         changement()
 
-    test = 1
+    antistart = 1
 
     Fenetre.after(int(pause * 1000), bouclePrincipale)
 
 
-#Bouton start/stop
+#Clique gauche pour modification de la map
 
-boutonStart = Button(Fenetre, text = "Start", fg = "chartreuse", command = start, borderwidth = 10)
-boutonStart.grid(row = 0, column = 0, columnspan = taille)
+
+def action(event):
+
+    if event.type != "" and event.num == 1:
+
+        position = event.widget.grid_info()
+
+        if event.widget["bg"] == "light grey" and event.widget["text"] == "   ":
+            event.widget["bg"] = couleurVivant
+            etatCell[position["row"] - 1][position["column"]] = True
+
+        elif event.widget["bg"] == couleurVivant and event.widget["text"] == "   ":
+            event.widget["bg"] = "light grey"
+            etatCell[position["row"] - 1][position["column"]] = False
+
+
+
+#Clique gauche event
+Fenetre.bind("<ButtonPress-1>", action)
+
+
+#Commandes
+
+frame = LabelFrame(Fenetre, text = "Commandes")
+frame.grid(row = 0, column = 0)
+
+
+boutonStart = Button(frame, text = "Start", fg = "chartreuse", command = start, borderwidth = 10)
+boutonStart.grid(row = 0, column = 0)
+
+boutonSave = Button(frame, text = "Save", command = save, borderwidth = 10)
+boutonSave.grid(row = 0, column = 1)
+
+labelTaille = Label(frame, text = " Taille =")
+labelTaille.grid(row = 0, column = 2)
+
+spinboxTaille = Spinbox(frame, from_ = 1, to = 50)
+spinboxTaille.grid(row = 0, column = 3)
+
+boutonGrille = Button(frame, text = "Créer une grille vide", command = creerGrille)
+boutonGrille.grid(row = 0, column = 4)
 
 
 #Lancement
 
 Fenetre.mainloop()
 
-print("fin")
+print("FIN")
 
 #
