@@ -14,7 +14,7 @@ from copy import deepcopy
 import os
 
 
-#Chemin relatif pour les fichiers
+#Chemin relatif pour les fichiers de maps
 
 fullpath = os.path.abspath(__file__)
 os.chdir(os.path.dirname(fullpath))
@@ -27,7 +27,7 @@ etatCell = []                   #map avec état cell à l'étape n
 etatCell2 = []                  #map avec état cell à l'étape n+1
 pause = 0.001                   #Temps de pause entre chaue étape (en s)
 choixCouleur = False            #choixCouleur ou couleur de base
-couleurVivant = "chartreuse"    #Couleur de base pour les cellules vivantes
+couleurVivant = "chartreuse"    #Couleur de base pour les cellules vivantes (vert)
 random = False                  #map générée random
 stop = False                    #Pour le bouton start/stop
 vide = False                    #Pour créer une map vide
