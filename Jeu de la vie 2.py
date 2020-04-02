@@ -21,7 +21,7 @@ os.chdir(os.path.dirname(fullpath))
 
 
 #Variables
-taille = 10
+#taille = 10                     #Taille d'un côté de la map (carré)
 pourcentageVivant = 50
 etatCell = []                   #map avec état cell à l'étape n
 etatCell2 = []                  #map avec état cell à l'étape n+1
@@ -62,7 +62,8 @@ def choixMap():
     stop = False
     vide = False
 
-    filepath = askopenfilename(title = "Ouvrir une map",filetypes = [("txt files", ".txt")])
+    filepath = askopenfilename(title = "Ouvrir une map",filetypes = [
+                                    ("txt files", ".txt")])
     print(filepath)
     fichier = open(filepath, "r")      #Importation du fichier map.txt
     contenuFichier = fichier.read()
@@ -237,7 +238,8 @@ def stopBoucle():
 
 
 def save():
-    fichierEcriture = asksaveasfile(title = "Enregistrer la configuration actuelle", filetypes = [("txt files", ".txt")])
+    fichierEcriture = asksaveasfile(title = "Enregistrer la configuration actuelle", filetypes = [
+                                            ("txt files", ".txt")])
     texteEcriture = str(taille) + "\n"
 
     for x in range(taille):
@@ -252,8 +254,8 @@ def save():
     fichierEcriture.close()
 
 
-def creerGrille():
-    global etape, taille, vide, etatCell, etatCell2
+def creerGrilleVide():
+    global etape, taille, vide, etatCell, etatCell2, importation
 
     del etatCell
     del etatCell2
@@ -517,7 +519,7 @@ labelTaille.grid(row = 0, column = 2)
 spinboxTaille = Spinbox(frameCommande, from_ = 1, to = 50)
 spinboxTaille.grid(row = 0, column = 3)
 
-boutonGrille = Button(frameCommande, text = "Créer une grille vide", command = creerGrille)
+boutonGrille = Button(frameCommande, text = "Créer une grille vide", command = creerGrilleVide)
 boutonGrille.grid(row = 0, column = 4)
 
 boutonCouleur = Button(frameCommande, text = "Changer la couleur des cellules vivantes", command = changerCouleur)
