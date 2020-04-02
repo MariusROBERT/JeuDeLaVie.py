@@ -21,7 +21,7 @@ os.chdir(os.path.dirname(fullpath))
 
 
 #Variables
-#taille = 10                     #Taille d'un côté de la map (carré)
+
 pourcentageVivant = 50
 etatCell = []                   #map avec état cell à l'étape n
 etatCell2 = []                  #map avec état cell à l'étape n+1
