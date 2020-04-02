@@ -9,12 +9,12 @@ from tkinter.messagebox import *
 from random import *
 import time
 from tkinter.filedialog import *
-import tkinter.colorchooser
+from tkinter.colorchooser import *
 from copy import deepcopy
 import os
 
 
-#Chemin relatif pour les fichiers de maps
+#Chemin relatif pour les fichiers
 
 fullpath = os.path.abspath(__file__)
 os.chdir(os.path.dirname(fullpath))
@@ -25,9 +25,8 @@ taille = 10
 pourcentageVivant = 50
 etatCell = []                   #map avec état cell à l'étape n
 etatCell2 = []                  #map avec état cell à l'étape n+1
-pause = 0.001                   #Temps de pause entre chaue étape (en s)
-choixCouleur = False            #choixCouleur ou couleur de base
-couleurVivant = "chartreuse"    #Couleur de base pour les cellules vivantes (vert)
+pause = 0.001                   #Temps de pause entre chaque étape (en s)
+couleurVivant = "chartreuse"    #Couleur de base pour les cellules vivantes
 random = False                  #map générée random
 stop = False                    #Pour le bouton start/stop
 vide = False                    #Pour créer une map vide
@@ -42,13 +41,7 @@ Fenetre = Tk()
 Fenetre.title("Jeu de la Vie by Marius")
 
 frameJeu = Frame(Fenetre)
-frameJeu.grid(row = 1, column = 0, sticky = "news")
-
-
-#Options
-
-if choixCouleur == True:
-    couleurVivant = (tkinter.colorchooser.askcolor(color=None))[1]
+frameJeu.grid(row = 1, column = 1, sticky = "news")
 
 
 #Commandes boutons
@@ -81,7 +74,7 @@ def choixMap():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
 
 
 def choixMoulin():
@@ -110,7 +103,7 @@ def choixMoulin():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
 
 
 def choixRandom():
@@ -132,7 +125,7 @@ def choixRandom():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
 
 
 def choixStatique():
@@ -161,7 +154,7 @@ def choixStatique():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
 
 
 def choixClignotant():
@@ -190,7 +183,7 @@ def choixClignotant():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
 
 
 def choixVaisseau():
@@ -219,7 +212,7 @@ def choixVaisseau():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
 
 
 
@@ -270,7 +263,7 @@ def creerGrille():
 
     resetFrame()
 
-    importation = True
+    importation = False
     random = False
     stop = False
     vide = True
@@ -279,7 +272,18 @@ def creerGrille():
     generation()
     initialisationFenetre()
 
-    frameCommande.grid(columnspan = taille)
+    frameCommande.grid(columnspan = 3, column = 0)
+
+
+def changerCouleur():
+    global couleurVivant
+
+    couleurVivantTemp = askcolor()[1]
+    if couleurVivantTemp != None:
+        couleurVivant = couleurVivantTemp
+
+    actualisationFenetre()
+
 
 
 #Génération
@@ -289,11 +293,11 @@ def generation():
 
     genere = True
 
-    Fenetre.rowconfigure(0, weight = 1)
-    Fenetre.rowconfigure(1, weight = 1)
-    Fenetre.rowconfigure(2, weight = 1)
+    Fenetre.rowconfigure(0, pad = 5, minsize = 100)
+    Fenetre.rowconfigure(1, weight = 1, pad = 5, minsize = 100)
+    Fenetre.rowconfigure(2, pad = 5, minsize = 100)
 
-    Fenetre.columnconfigure(1, weight = 1)
+    Fenetre.columnconfigure(1, weight = 1, pad = 5, minsize = 50)
 
     for y in range(taille):
         etatCell.append([])     #Tableaux
@@ -470,6 +474,8 @@ def bouclePrincipale():
     Fenetre.after(int(pause * 1000), bouclePrincipale)
 
 
+
+
 #Clique gauche pour modification de la map
 
 
@@ -496,7 +502,7 @@ Fenetre.bind("<ButtonPress-1>", action)
 #Commandes
 
 frameCommande = LabelFrame(Fenetre, text = "Commandes")
-frameCommande.grid(row = 0, column = 0, sticky = "news")
+frameCommande.grid(row = 0, column = 1, sticky = "news")
 
 
 boutonStart = Button(frameCommande, text = "Start", fg = "chartreuse", command = start)
@@ -514,11 +520,14 @@ spinboxTaille.grid(row = 0, column = 3)
 boutonGrille = Button(frameCommande, text = "Créer une grille vide", command = creerGrille)
 boutonGrille.grid(row = 0, column = 4)
 
+boutonCouleur = Button(frameCommande, text = "Changer la couleur des cellules vivantes", command = changerCouleur)
+boutonCouleur.grid(row = 0, column = 5)
+
 
 #Infos
 
 frameInfos = LabelFrame(Fenetre, text = "Infos")
-frameInfos.grid(row = 2, column = 0, sticky = "news")
+frameInfos.grid(row = 2, column = 1, sticky = "news")
 
 nombreEtapes = Label(frameInfos, text = "Étape 0")
 nombreEtapes.pack()
