@@ -125,6 +125,7 @@ def choixRandom():
     importation = True
     stop = False
     vide = False
+    taille = int(spinboxTaille.get())
 
     try:
         del etatCell
@@ -400,6 +401,7 @@ def initialisationFenetre():
             else:
                 print("Erreur Cell ni vivante ni morte")    #Erreur, pas censé arriver
 
+    nombreCell["text"] = str(np.sum(etatCell)) + " Cellules vivantes"
 
 
 def etapeSuivante():
@@ -436,6 +438,7 @@ def resetFrame():       #Clear la frame pour en remettre une autre
         widget.grid_forget()
 
     nombreEtapes["text"] = "Étape : 0"
+    nombreCell["text"] = str(np.sum(etatCell)) + " Cellules vivantes"
 
 
 
@@ -449,6 +452,7 @@ def bouclePrincipale():
         etape += 1
         nombreEtapes["text"] = "Étape : " + str(etape)
 
+    nombreCell["text"] = str(np.sum(etatCell)) + " Cellules vivantes"
     antistart = 1
 
     Fenetre.after(int(pause * 1000), bouclePrincipale)
@@ -467,11 +471,11 @@ def action(event):
 
         if event.widget["bg"] == "light grey" and event.widget["text"] == "   ":
             event.widget["bg"] = couleurVivant
-            etatCell[position["row"], position["column"]] = True
+            etatCell[position["row"], position["column"]] = 1
 
         elif event.widget["bg"] == couleurVivant and event.widget["text"] == "   ":
             event.widget["bg"] = "light grey"
-            etatCell[position["row"], position["column"]] = False
+            etatCell[position["row"], position["column"]] = 0
 
 
 
@@ -512,11 +516,12 @@ frameInfos.grid(row = 2, column = 1, sticky = "news")
 nombreEtapes = Label(frameInfos, text = "Étape 0")
 nombreEtapes.pack()
 
+nombreCell = Label(frameInfos, text = "0 Cellules Vivantes")
+nombreCell.pack()
 
 #Lancement
 
 Fenetre.mainloop()
 
-print("FIN")
 
 #
