@@ -70,7 +70,7 @@ def choixMap():
     fichier.close()
 
     taille = int(contenuFichier.split("\n")[0])     #Taille de la map sur la 1ère ligne
-    print(taille)
+
 
     generation()
     initialisationFenetre()
@@ -99,7 +99,7 @@ def choixMoulin():
     fichier.close()
 
     taille = int(contenuFichier.split("\n")[0])     #Taille de la map sur la 1ère ligne
-    print(taille)
+
 
     generation()
     initialisationFenetre()
@@ -115,6 +115,7 @@ def choixRandom():
     etatCell = []
     etatCell2 = []
     etape = 0
+    taille = int(spinboxTaille.get())
 
     resetFrame()
 
@@ -150,7 +151,7 @@ def choixStatique():
     fichier.close()
 
     taille = int(contenuFichier.split("\n")[0])     #Taille de la map sur la 1ère ligne
-    print(taille)
+
 
     generation()
     initialisationFenetre()
@@ -179,7 +180,7 @@ def choixClignotant():
     fichier.close()
 
     taille = int(contenuFichier.split("\n")[0])     #Taille de la map sur la 1ère ligne
-    print(taille)
+
 
     generation()
     initialisationFenetre()
@@ -208,7 +209,7 @@ def choixVaisseau():
     fichier.close()
 
     taille = int(contenuFichier.split("\n")[0])     #Taille de la map sur la 1ère ligne
-    print(taille)
+
 
     generation()
     initialisationFenetre()
