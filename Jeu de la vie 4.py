@@ -33,7 +33,7 @@ importation = False             #Importation d'une map
 etape = 0
 genere = False
 taille = 20
-cote_case = 10
+cote_case = 30
 
 
 cases = {}
@@ -497,7 +497,7 @@ boutonSave.grid(row = 0, column = 1)
 labelTaille = Label(frameCommande, text = " Taille =")
 labelTaille.grid(row = 0, column = 2)
 
-spinboxTaille = Spinbox(frameCommande, from_ = 1, to = 50, textvariable=DoubleVar(value=20))
+spinboxTaille = Spinbox(frameCommande, from_ = 1, to = 50, textvariable=DoubleVar(value=taille))
 spinboxTaille.grid(row = 0, column = 3)
 
 boutonGrille = Button(frameCommande, text = "Créer une grille vide", command = creerGrilleVide)
